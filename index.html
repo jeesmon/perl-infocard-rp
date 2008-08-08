@@ -1,0 +1,33 @@
+<html>
+<body>
+
+<h2>Try InformationCard</h2>
+
+<textarea cols="100" rows="15" readonly="true">
+<!-- Example form -->
+
+<form method='post' action='/cgi-bin/infocard.cgi' id='infocard' enctype='application/x-www-form-urlencoded'>
+  <object type="application/x-informationcard" name="xmlToken">
+    <param name="requiredClaims" value="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/privatepersonalidentifier http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname" />
+    <param name="privacyVersion" value="1"/>
+    <param name="tokenType" value="urn:oasis:names:tc:SAML:1.0:assertion"/>
+  </object>
+  <input type="submit"/>
+</form>
+</textarea>
+
+
+<form method='post' action='/cgi-bin/infocard.cgi' id='infocard' enctype='application/x-www-form-urlencoded'>
+  <object type="application/x-informationcard" name="xmlToken">
+    <param name="requiredClaims" value="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/privatepersonalidentifier http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname" />
+    <param name="privacyVersion" value="1"/>
+    <param name="tokenType" value="urn:oasis:names:tc:SAML:1.0:assertion"/>
+  </object>
+
+  <br/>
+
+  <button type="submit">
+    <img src="infocard_60x42.png" style="padding:10px" />
+  </button>
+</form>
+
