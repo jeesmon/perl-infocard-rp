@@ -1,0 +1,6 @@
+Revision history for Perl extension InfoCard.
+
+0.01  Thu Aug  7 22:30:08 2008
+	- original version; created by h2xs 1.23 with options
+		-AXc -n InfoCard
+
