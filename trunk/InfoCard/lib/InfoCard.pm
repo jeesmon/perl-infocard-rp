@@ -1,6 +1,5 @@
 package InfoCard;
 
-use 5.008008;
 use strict;
 use warnings;
 
@@ -634,6 +633,7 @@ sub getCommonName {
             "-in $PUB_KEY_PATH " .
             "-subject";
   my $sub = `$cmd`;
+  $sub =~ s/\n//; $sub =~ s/\r//;
   my %h = ();
   map {my($k, $v) = split(/=/); $h{$k} = $v if $k and $v;} split(/\//, $sub);
   return $h{CN};
