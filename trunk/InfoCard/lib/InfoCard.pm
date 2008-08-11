@@ -216,6 +216,32 @@ sub claims {
   return $self->{ATTRIBUTES}; 
 }
 
+sub getClaimByUri {
+  my $self = shift;
+  my $uri = shift;
+
+  if($self->{ATTRIBUTES} && $self->{ATTRIBUTES}{$uri}) {
+    return $self->{ATTRIBUTES}{$uri}->[2];
+  }
+  else {
+    return undef;
+  }
+}
+
+sub getClaimByName {
+  my $self = shift;
+  my $name = shift;
+
+  my %claims = %{$self->{ATTRIBUTES}};
+  foreach my $c(keys %claims) {
+    if($claims{$c}->[1] eq $name) {
+      return $claims{$c}->[2];
+    }
+  }
+
+  return undef;
+}
+
 ######### private methods ##########
 sub writeToTempFile {
   my $content = shift;
@@ -366,7 +392,7 @@ sub getSignedTokenInfo {
     $tokenInfo{MINOR_VERSION} = ${$root_node}->getAttribute('MinorVersion');
     $tokenInfo{ASSERTION_ID} = ${$root_node}->getAttribute('AssertionID');
 
-    my $strptime = DateTime::Format::Strptime->new(pattern => '%Y-%m-%dT%H:%M:%S.%3NZ');
+    my $strptime = DateTime::Format::Strptime->new(pattern => '%Y-%m-%dT%H:%M:%S');
 
     $tokenInfo{ISSUE_INSTANT} = $strptime->parse_datetime(${$root_node}->getAttribute('IssueInstant')); 
     $tokenInfo{ISSUER} = ${$root_node}->getAttribute('Issuer'); 
@@ -521,7 +547,7 @@ sub verifyToken {
     $$tokenInfo{ERROR} = "Missing NotOnOrAfter Attribute"; return;
   }
 
-  unless($$tokenInfo{AUDIENCE}) {
+  if(!$$tokenInfo{AUDIENCE} and $$tokenInfo{ISSUER} eq $XMLSOAP_SELF_ISSUED) {
     $$tokenInfo{ERROR} = "Missing Audience node"; return;
   }
 
@@ -556,7 +582,7 @@ sub verifyToken {
     $$tokenInfo{ERROR} = "No attributes returned"; return;
   }
 
-  unless(checkAudience($$tokenInfo{AUDIENCE}, \$$tokenInfo{ERROR})) {
+  unless(checkAudience($$tokenInfo{AUDIENCE}, \$$tokenInfo{ERROR}, $$tokenInfo{ISSUER})) {
     return;
   }
 
@@ -568,6 +594,9 @@ sub verifyToken {
 sub checkAudience {
   my $uri = shift;
   my $err = shift;
+  my $issuer = shift;
+
+  return 1 if(!$uri and $issuer ne $XMLSOAP_SELF_ISSUED);
 
   my ($scheme, $host) = URI::Split::uri_split($uri);
   if($scheme ne "https") {
