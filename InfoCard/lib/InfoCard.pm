@@ -742,6 +742,8 @@ and the following PERL modules and it's dependencies:
 
 	   )
 
+=back
+
 =head1 METHODS
 
 This class offers the following methods:
@@ -777,6 +779,8 @@ This class offers the following methods:
 =item * keyValue($key)
 
 =item * claims()
+
+=back
 
 =head1 SEE ALSO
 
