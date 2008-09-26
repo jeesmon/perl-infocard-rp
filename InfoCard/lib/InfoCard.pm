@@ -65,6 +65,7 @@ sub new {
   if(ref $arg eq 'HASH') {
     $LD_LIB_PATH = $arg->{LIB_PATH} if defined $arg->{LIB_PATH};
     $XMLSEC_PATH = $arg->{XMLSEC_PATH} if defined $arg->{XMLSEC_PATH};
+    $OPENSSL_PATH = $arg->{OPENSSL_PATH} if defined $arg->{OPENSSL_PATH};
     $PUB_KEY_PATH = $arg->{PUB_KEY_PATH} if defined $arg->{PUB_KEY_PATH};
     $PRIV_KEY_PATH = $arg->{PRIV_KEY_PATH} if defined $arg->{PRIV_KEY_PATH};
   } 
