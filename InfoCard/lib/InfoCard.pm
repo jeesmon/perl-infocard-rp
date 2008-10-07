@@ -7,8 +7,8 @@ use File::Temp qw(tempfile);
 use XML::XPath;
 use XML::XPath::NodeSet;
 use XML::XPath::XMLParser;
-use DateTime::Format::Strptime;
 use URI::Split;
+use Date::Parse;
 
 require Exporter;
 
@@ -203,6 +203,12 @@ sub availableKeys {
   return keys(%$self);
 }
 
+sub issuer {
+  my $self = shift;
+
+  return $self->{ISSUER};
+}
+
 sub keyValue {
   my $self = shift;
   my $key = shift;
@@ -393,16 +399,14 @@ sub getSignedTokenInfo {
     $tokenInfo{MINOR_VERSION} = ${$root_node}->getAttribute('MinorVersion');
     $tokenInfo{ASSERTION_ID} = ${$root_node}->getAttribute('AssertionID');
 
-    my $strptime = DateTime::Format::Strptime->new(pattern => '%Y-%m-%dT%H:%M:%S');
-
-    $tokenInfo{ISSUE_INSTANT} = $strptime->parse_datetime(${$root_node}->getAttribute('IssueInstant')); 
+    $tokenInfo{ISSUE_INSTANT} = ${$root_node}->getAttribute('IssueInstant'); 
     $tokenInfo{ISSUER} = ${$root_node}->getAttribute('Issuer'); 
 
     foreach my $c(${$root_node}->getChildNodes) {
       if(${$c}->getLocalName eq "Conditions") {
         if(${${$c}->getNamespace}->getValue eq $saml_ns) {
-          $tokenInfo{NOT_BEFORE} = $strptime->parse_datetime(${$c}->getAttribute('NotBefore'));
-          $tokenInfo{NOT_ON_OR_AFTER} = $strptime->parse_datetime(${$c}->getAttribute('NotOnOrAfter'));
+          $tokenInfo{NOT_BEFORE} = str2time(${$c}->getAttribute('NotBefore'));
+          $tokenInfo{NOT_ON_OR_AFTER} = str2time(${$c}->getAttribute('NotOnOrAfter'));
           foreach my $c2(${$c}->getChildNodes) {
             if(${$c2}->getLocalName eq "AudienceRestrictionCondition" && ${${$c2}->getNamespace}->getValue eq $saml_ns) {
               foreach my $c3(${$c2}->getChildNodes) {
@@ -624,9 +628,9 @@ sub isExpired {
   my $not_on_or_after = shift;
   my $err = shift;
 
-  my $now = DateTime->now;
-  my $slop = DateTime::Duration->new(minutes => 5);
-  my $expired = DateTime->compare($now, $not_on_or_after + $slop) == 1 || DateTime->compare($now, $not_before - $slop) == -1; 
+  my $now = time();
+  my $slop = 60*5; # 5 minutes slop
+  my $expired = ($now < $not_before - $slop or $now > $not_on_or_after + $slop);
 
   if($expired) {
     $$err = "Got expired token: now=$now, not_before=$not_before, not_after=$not_on_or_after";
@@ -716,7 +720,7 @@ and the following PERL modules and it's dependencies:
 
 4. XML::XPath::XMLParser
 
-5. DateTime::Format::Strptime
+5. DateTime
 
 6. URI::Split
 
