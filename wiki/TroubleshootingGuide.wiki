@@ -32,7 +32,12 @@ Encrypted Token
 main::(./infocard.pl:22):	print $encToken;
 }}}
 
- * Command to decrypt token using xmlsec
+  * Command to decrypt token using xmlsec
 {{{
-xmlsec1 --decrypt --privkey-pem /etc/ssl-keys/server.key enctoken.xml
+xmlsec1 --decrypt --privkey-pem /etc/ssl-keys/server.key enctoken.xml > dectoken.xml
+}}}
+
+  * Command to verify token signature using xmlsec
+{{{
+xmlsec1 --verify --id-attr:AssertionID urn:oasis:names:tc:SAML:1.0:assertion:Assertion --node-xpath / --enabled-reference-uris same-doc dectoken.xml
 }}}
