@@ -487,7 +487,7 @@ sub getSignedTokenInfo {
             my @attr_value = ();
             foreach my $c3(${$c2}->getChildNodes) {
               if(${$c3}->getLocalName eq "AttributeValue" && ${${$c3}->getNamespace}->getValue eq $saml_ns) {
-                push @attr_value, ${${$c3}->getFirstChild}->getValue;
+                push @attr_value, ${$c3}->getFirstChild ? ${${$c3}->getFirstChild}->getValue : "";
               } 
             }
             $attributes{"${attr_ns}/${attr_name}"} = [$attr_ns, $attr_name, @attr_value];

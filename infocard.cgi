@@ -1,14 +1,12 @@
-#!/usr/bin/perl -I/var/www/rp/InfoCard/lib
+#!/usr/bin/perl -I/var/www/perl-infocard-rp/InfoCard/lib
 
 use strict;
 
 use CGI;
 use InfoCard;
 
-my $LD_LIB_PATH = "/home/jjacob/tools/lib";
-my $XMLSEC_PATH = "/home/jjacob/tools/bin/xmlsec1";
-my $PRIV_KEY_PATH = "/home/jjacob/ssl/server.key";
-my $PUB_KEY_PATH = "/home/jjacob/ssl/server.crt";
+my $PRIV_KEY_PATH = "/etc/ssl-keys/server.key";
+my $PUB_KEY_PATH = "/etc/ssl-keys/server.crt";
 
 my $cgi = new CGI();
 
