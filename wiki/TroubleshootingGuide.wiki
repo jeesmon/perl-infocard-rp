@@ -33,7 +33,6 @@ main::(./infocard.pl:22):	print $encToken;
 }}}
 
  * Command to decrypt token using xmlsec
-
 {{{
 xmlsec1 --decrypt --privkey-pem /etc/ssl-keys/server.key enctoken.xml
 }}}
